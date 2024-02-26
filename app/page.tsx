@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { Header } from './components/Header';
 import { ChatMessage } from './components/Message';
 import { Form } from './components/Form';
@@ -9,14 +10,25 @@ import { mockData } from './utils/mockData';
 
 const Home: React.FC = () => {
   const [data, setData] = useState<DataProps[]>(mockData);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [data]);
 
   const renderData = () => {
     return (
-      <>
+      <div className="flex flex-col p-4 overflow-hidden">
         {data.map((chat, chatIndex) => (
           <div key={chatIndex}>
             <Header name={chat.name} avatar={chat.avatar} />
-            <div className="flex flex-col p-4 overflow-hidden">
+            <div ref={messagesEndRef} className="overflow-x-hidden max-h-96">
               {chat.messages.map((message, messageIndex) => (
                 <ChatMessage
                   key={messageIndex}
@@ -27,11 +39,11 @@ const Home: React.FC = () => {
             </div>
           </div>
         ))}
-      </>
+      </div>
     );
   };
 
-  const handleMessageSubmit = (newMessage: string) => {
+  const handleMessageSubmit: FormProps['onSubmit'] = (newMessage: string) => {
     const updatedData = [...data];
     updatedData[0].messages.push({ type: 'user', text: newMessage });
     setData(updatedData);
@@ -40,7 +52,7 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col w-full max-w-sm border border-gray-200 rounded-lg overflow-hidden">
       {renderData()}
-      <Form onSubmit={handleMessageSubmit as FormProps['onSubmit']} />
+      <Form onSubmit={handleMessageSubmit} />
     </div>
   );
 };

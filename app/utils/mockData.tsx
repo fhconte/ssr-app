@@ -5,11 +5,11 @@ export const mockData = [
     messages: [
       {
         type: 'system',
-        text: 'Basicamente, o Tailwind ajuda a estilizar seu HTML de forma rápida e consistente.',
+        text: 'O Tailwind ajuda a estilizar seu HTML de forma rápida e consistente.',
       },
       {
         type: 'system',
-        text: 'Você pode usar o PostCSS com o Tailwind para compilar e otimizar seu código CSS, aplicando transformações como autoprefixing, minificação e muito mais.',
+        text: 'Você pode usar o PostCSS com o Tailwind para compilar e otimizar seu código CSS.',
       },
       {
         type: 'user',
