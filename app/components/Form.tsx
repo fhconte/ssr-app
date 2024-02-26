@@ -3,15 +3,15 @@
 import React, { useState } from 'react';
 import { FormProps } from '../interfaces/FormProps';
 
-const Form: React.FC<FormProps> = ({ onSubmit }) => {
+const Form: React.FC<FormProps & { chatId: number }> = ({ onSubmit, chatId }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
-  const handleClick = () => {
-    onSubmit(inputValue);
+  const handleClick = (chatId: number) => {
+    onSubmit(inputValue, chatId);
     setInputValue('');
   };
 
@@ -26,7 +26,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       <button
         className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-full w-10 h-10"
         type="button"
-        onClick={handleClick}
+        onClick={() => handleClick(chatId)}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

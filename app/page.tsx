@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Header } from './components/Header';
 import { ChatMessage } from './components/Message';
 import { Form } from './components/Form';
@@ -22,15 +22,33 @@ const Home: React.FC = () => {
     scrollToBottom();
   }, [data]);
 
-  const memoizedData = useMemo(() => data, [data]);
+  const handleMessageSubmit: FormProps['onSubmit'] = (newMessage: string, chatId: number) => {
+    setData(prevData => {
+      return prevData.map(chat => {
+        if (chat.id === chatId) {
+          return {
+            ...chat,
+            messages: [
+              ...chat.messages,
+              { type: 'user', text: newMessage }
+            ]
+          };
+        }
+        return chat;
+      });
+    });
+  };
 
   const renderData = () => {
     return (
       <div className="flex flex-col p-4 overflow-hidden">
-        {memoizedData.map((chat, chatIndex) => (
+        {data.map((chat, chatIndex) => (
           <div key={chatIndex}>
             <Header name={chat.name} avatar={chat.avatar} />
-            <div ref={messagesEndRef} className="overflow-x-hidden max-h-96 scroll-smooth scrollbar-hidden">
+            <div
+              ref={messagesEndRef}
+              className="overflow-x-hidden max-h-96 scroll-smooth scrollbar-hidden"
+            >
               {chat.messages.map((message, messageIndex) => (
                 <ChatMessage
                   key={messageIndex}
@@ -45,16 +63,16 @@ const Home: React.FC = () => {
     );
   };
 
-  const handleMessageSubmit: FormProps['onSubmit'] = (newMessage: string) => {
-    const updatedData = [...data];
-    updatedData[0].messages.push({ type: 'user', text: newMessage });
-    setData(updatedData);
-  };
-
   return (
     <div className="flex flex-col w-full max-w-sm border border-gray-200 rounded-lg overflow-hidden">
       {renderData()}
-      <Form onSubmit={handleMessageSubmit} />
+      {mockData.map((chat) => (
+        <Form
+          key={chat.id}
+          onSubmit={(message) => handleMessageSubmit(message, chat.id)}
+          chatId={chat.id}
+        />
+      ))}
     </div>
   );
 };

@@ -1,3 +1,3 @@
 export interface FormProps {
-  onSubmit: (message: string) => void;
+  onSubmit: (message: string, chatId: number) => void;
 }
