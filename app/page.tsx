@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Header } from './components/Header';
 import { ChatMessage } from './components/Message';
 import { Form } from './components/Form';
@@ -22,10 +22,12 @@ const Home: React.FC = () => {
     scrollToBottom();
   }, [data]);
 
+  const memoizedData = useMemo(() => data, [data]);
+
   const renderData = () => {
     return (
       <div className="flex flex-col p-4 overflow-hidden">
-        {data.map((chat, chatIndex) => (
+        {memoizedData.map((chat, chatIndex) => (
           <div key={chatIndex}>
             <Header name={chat.name} avatar={chat.avatar} />
             <div ref={messagesEndRef} className="overflow-x-hidden max-h-96">
