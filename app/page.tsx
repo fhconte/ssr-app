@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { Header } from './components/Header';
 import { ChatMessage } from './components/Message';
 import { Form } from './components/Form';
@@ -27,39 +33,48 @@ const Home = () => {
     }
   };
 
-  const handleMessageSubmit: FormProps['onSubmit'] = (
-    newMessage: string,
-    chatId: number
-  ) => {
-    if (newMessage.trim().length === 0) return;
-    setData((prevData) =>
-      prevData.map((chat) =>
-        chat.id === chatId
-          ? {
-            ...chat,
-            messages: [...chat.messages, { type: 'user', text: newMessage }],
-          }
-          : chat
-      )
-    );
-    setScrollPositions((prevPositions) => ({ ...prevPositions, [chatId]: 0 }));
-  };
-
-  const handleScroll = (chatId: number) => {
-    const messagesEndRef = messagesEndRefs.current[chatId];
-    if (messagesEndRef) {
+  const handleMessageSubmit = useCallback<FormProps['onSubmit']>(
+    (newMessage, chatId) => {
+      if (newMessage.trim().length === 0) return;
+      setData((prevData) =>
+        prevData.map((chat) =>
+          chat.id === chatId
+            ? {
+              ...chat,
+              messages: [
+                ...chat.messages,
+                { type: 'user', text: newMessage },
+              ],
+            }
+            : chat
+        )
+      );
       setScrollPositions((prevPositions) => ({
         ...prevPositions,
-        [chatId]: messagesEndRef.scrollHeight - messagesEndRef.scrollTop,
+        [chatId]: 0,
       }));
-    }
-  };
+    },
+    []
+  );
 
-  const renderData = () =>
-    data.map((chat) => (
+  const handleScroll = useCallback(
+    (chatId: number) => {
+      const messagesEndRef = messagesEndRefs.current[chatId];
+      if (messagesEndRef) {
+        setScrollPositions((prevPositions) => ({
+          ...prevPositions,
+          [chatId]: messagesEndRef.scrollHeight - messagesEndRef.scrollTop,
+        }));
+      }
+    },
+    [messagesEndRefs]
+  );
+
+  const renderData = useMemo(() => {
+    return data.map((chat) => (
       <div
         key={chat.id}
-        className="max-w-sm border border-gray-200 rounded-lg overflow-hidden  mb-4"
+        className="max-w-sm border border-gray-200 rounded-lg overflow-hidden mb-4"
       >
         <Header name={chat.name} avatar={chat.avatar} />
         <div
@@ -79,10 +94,9 @@ const Home = () => {
         />
       </div>
     ));
+  }, [data, messagesEndRefs, handleScroll, handleMessageSubmit]);
 
-  return (
-    <div className="flex flex-col p-4 overflow-hidden">{renderData()}</div>
-  );
+  return <div className="flex flex-col p-4 overflow-hidden">{renderData}</div>;
 };
 
 export default Home;
