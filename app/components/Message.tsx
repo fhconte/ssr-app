@@ -1,6 +1,6 @@
 import { MessageProps } from '../interfaces/MessageProps';
 
-const ChatMessage = ({ type, text }: MessageProps): JSX.Element => {
+const ChatMessage = ({ type, text }: MessageProps): JSX.Element | null => {
   switch (type) {
     case 'user':
       return (
@@ -27,7 +27,7 @@ const ChatMessage = ({ type, text }: MessageProps): JSX.Element => {
         </div>
       );
     default:
-      return <></>;
+      return null;
   }
 };
 

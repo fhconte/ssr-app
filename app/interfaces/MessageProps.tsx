@@ -1,4 +1,6 @@
+export type MessageType = 'user' | 'system';
+
 export interface MessageProps {
-  type: string;
+  type: MessageType;
   text: string;
 }
