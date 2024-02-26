@@ -47,7 +47,7 @@ const Home: React.FC = () => {
             <Header name={chat.name} avatar={chat.avatar} />
             <div
               ref={messagesEndRef}
-              className="overflow-x-hidden max-h-96 scroll-smooth scrollbar-hidden"
+              className="overflow-x-hidden max-h-96 scroll-smooth"
             >
               {chat.messages.map((message, messageIndex) => (
                 <ChatMessage
