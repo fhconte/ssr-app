@@ -10,36 +10,39 @@ import { mockData } from './utils/mockData';
 
 const Home = () => {
   const [data, setData] = useState<DataProps[]>(mockData);
-  const [scrollPositions, setScrollPositions] = useState<Record<number, number>>({});
+  const [scrollPositions, setScrollPositions] = useState<
+    Record<number, number>
+  >({});
   const messagesEndRefs = useRef<Record<number, HTMLDivElement | null>>({});
-
-  const scrollToBottom = (chatId: number) => {
-    const messagesEndRef = messagesEndRefs.current[chatId];
-    if (messagesEndRef) {
-      messagesEndRef.scrollTop = messagesEndRef.scrollHeight - scrollPositions[chatId];
-    }
-  };
 
   useEffect(() => {
     data.forEach((chat) => scrollToBottom(chat.id));
   }, [data]);
 
-  const handleMessageSubmit: FormProps['onSubmit'] = (newMessage: string, chatId: number) => {
-    setData((prevData) => {
-      return prevData.map((chat) => {
-        if (chat.id === chatId && newMessage.length > 0) {
-          return {
+  const scrollToBottom = (chatId: number) => {
+    const messagesEndRef = messagesEndRefs.current[chatId];
+    if (messagesEndRef) {
+      messagesEndRef.scrollTop =
+        messagesEndRef.scrollHeight - (scrollPositions[chatId] || 0);
+    }
+  };
+
+  const handleMessageSubmit: FormProps['onSubmit'] = (
+    newMessage: string,
+    chatId: number
+  ) => {
+    if (newMessage.trim().length === 0) return;
+    setData((prevData) =>
+      prevData.map((chat) =>
+        chat.id === chatId
+          ? {
             ...chat,
             messages: [...chat.messages, { type: 'user', text: newMessage }],
-          };
-        }
-        return chat;
-      });
-    });
-    setScrollPositions((prevPositions) => ({
-      ...prevPositions,
-      [chatId]: 0,
-    }));
+          }
+          : chat
+      )
+    );
+    setScrollPositions((prevPositions) => ({ ...prevPositions, [chatId]: 0 }));
   };
 
   const handleScroll = (chatId: number) => {
@@ -52,39 +55,33 @@ const Home = () => {
     }
   };
 
-  const renderData = () => {
-    return data.map((chat) => (
-      <div key={chat.id} className="flex flex-col w-full max-w-sm border border-gray-200 rounded-lg overflow-hidden">
-        <div>
-          <Header name={chat.name} avatar={chat.avatar} />
-          <div
-            ref={(ref) => {
-              messagesEndRefs.current[chat.id] = ref;
-            }}
-            className="overflow-x-hidden max-h-96 scroll-smooth py-2 px-4"
-            onScroll={() => handleScroll(chat.id)}
-          >
-            {chat.messages.map((message, messageIndex) => (
-              <ChatMessage
-                key={messageIndex}
-                type={message.type}
-                text={message.text}
-              />
-            ))}
-          </div>
-          <Form
-            onSubmit={(message) => handleMessageSubmit(message, chat.id)}
-            chatId={chat.id}
-          />
+  const renderData = () =>
+    data.map((chat) => (
+      <div
+        key={chat.id}
+        className="max-w-sm border border-gray-200 rounded-lg overflow-hidden  mb-4"
+      >
+        <Header name={chat.name} avatar={chat.avatar} />
+        <div
+          ref={(ref) => {
+            messagesEndRefs.current[chat.id] = ref;
+          }}
+          className="max-h-96 overflow-y-auto py-2 px-4 scroll-smooth"
+          onScroll={() => handleScroll(chat.id)}
+        >
+          {chat.messages.map((message, messageIndex) => (
+            <ChatMessage key={messageIndex} {...message} />
+          ))}
         </div>
+        <Form
+          onSubmit={(message) => handleMessageSubmit(message, chat.id)}
+          chatId={chat.id}
+        />
       </div>
     ));
-  };
 
   return (
-    <div className="flex flex-col p-4 overflow-hidden">
-      {renderData()}
-    </div>
+    <div className="flex flex-col p-4 overflow-hidden">{renderData()}</div>
   );
 };
 
