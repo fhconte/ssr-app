@@ -87,7 +87,3 @@
   scrollbar-width: none;
   /* Firefox */
 }
-
-.scrollSmooth {
-  scroll-behavior: smooth;
-}
