@@ -20,6 +20,25 @@ const mockData: DataProps[] = [
       },
     ],
   },
+  {
+    id: 2,
+    name: 'Fulano',
+    avatar: '/logo.png',
+    messages: [
+      {
+        type: 'user',
+        text: "Used by some of the world's largest companies, Next.js enables you to create high-quality we applications with the power of React components.",
+      },
+      {
+        type: 'system',
+        text: 'The web framework for when it matters Peerless performance, efficiency and developer experience.',
+      },
+      {
+        type: 'system',
+        text: 'Next.js is trusted by some of the biggest names of the web.',
+      },
+    ],
+  },
 ];
 
 export { mockData };
