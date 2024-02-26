@@ -25,7 +25,7 @@ const Home: React.FC = () => {
   const handleMessageSubmit: FormProps['onSubmit'] = (newMessage: string, chatId: number) => {
     setData(prevData => {
       return prevData.map(chat => {
-        if (chat.id === chatId) {
+        if (chat.id === chatId && newMessage.length > 0) {
           return {
             ...chat,
             messages: [
