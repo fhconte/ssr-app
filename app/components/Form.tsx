@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FormProps } from '../interfaces/FormProps';
 
-const Form: React.FC<FormProps & { chatId: number }> = ({ onSubmit, chatId }) => {
+const Form = ({ onSubmit, chatId }: FormProps) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

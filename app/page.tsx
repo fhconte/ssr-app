@@ -8,7 +8,7 @@ import { DataProps } from './interfaces/DataProps';
 import { FormProps } from './interfaces/FormProps';
 import { mockData } from './utils/mockData';
 
-const Home: React.FC = () => {
+const Home = () => {
   const [data, setData] = useState<DataProps[]>(mockData);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
