@@ -30,7 +30,7 @@ const Home: React.FC = () => {
         {memoizedData.map((chat, chatIndex) => (
           <div key={chatIndex}>
             <Header name={chat.name} avatar={chat.avatar} />
-            <div ref={messagesEndRef} className="overflow-x-hidden max-h-96 scroll-smooth">
+            <div ref={messagesEndRef} className="overflow-x-hidden max-h-96 scroll-smooth scrollbar-hidden">
               {chat.messages.map((message, messageIndex) => (
                 <ChatMessage
                   key={messageIndex}
